@@ -134,7 +134,12 @@ sub main {
     $tray->show_all;
 
     login();
-    punch_in() if $auto_punch_in;
+    if ( $auto_punch_in ) {
+        punch_in();
+    }
+    else {
+        change_state(0);
+    }
     check();
     Glib::Timeout->add( $wait_time_in_seconds * 1000, sub { check(); } );
     Gtk2->main;
