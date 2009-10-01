@@ -695,12 +695,22 @@ sub popdown {
 
 # v main ----------------------------------------------------------------------
 
-unless ( $user && $pass ) {
-    print "Pon tu usuario y password CO!\n";
-    exit;
-}
 unless ( $NAME ) {
     print "Pon tu nombre completo en \$NAME CO!\n";
     exit;
 }
+
+if ( $authenticate_only_with_the_cert ) {
+    unless ( $ENV{HTTPS_PKCS12_FILE} and $ENV{HTTPS_PKCS12_PASSWORD} ) {
+        print "Pon el certificado y la password CO!\n";
+        exit;
+    }
+}
+else {
+    unless ( $user and $pass ) {
+        print "Pon tu usuario y password CO!\n";
+        exit;
+    }
+}
+
 main();
