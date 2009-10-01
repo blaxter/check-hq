@@ -56,6 +56,8 @@ my $animation_delay        = 0.003;
 my $ICON_FILE     = "$FindBin::Bin/punch_in.png";
 my $ICON_OUT_FILE = "$FindBin::Bin/punch_out.png";
 
+my $browser = "/usr/bin/sensible-browser";
+
 # ^ Configurable options ------------------------------------------------------
 
 use WWW::Mechanize;
@@ -334,6 +336,10 @@ sub handle_button_press {
     if ( $event->button != 1 ) {
         $menu->popup( undef, undef, sub { return position_menu( $x, $y ) },
             0, $event->button, $event->time );
+    }
+    elsif ( $event->button == 1) {
+      my $editor_url = $base_url . '/timetracking/editor';
+      `$browser $editor_url`
     }
 }
 
