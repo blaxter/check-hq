@@ -94,6 +94,7 @@ my $out_icon;
 # Gtk stuff
 my $menu;
 my $info_popup;                      # the popup onmouseover
+my $actual_info_popup;               # the popup that it's being showed
 my $notify_popup;                    # the popup when something happens
 my $trayicon_box
   ;    # The "real" trayicon, here we have the icon who receives the events
@@ -122,10 +123,13 @@ sub main {
     $trayicon_box = Gtk2::EventBox->new;
     $trayicon_box->add($tray_hbox);
     $trayicon_box->signal_connect( 'enter_notify_event',
-        sub { show_notify(); }
+        sub {
+            $actual_info_popup = $info_popup;
+            show_notify();
+        }
     );
     $trayicon_box->signal_connect( 'leave_notify_event',
-        sub { $info_popup->hide; }
+        sub { $actual_info_popup->hide; }
     );
     $trayicon_box->signal_connect( 'button_press_event',
         \&handle_button_press
