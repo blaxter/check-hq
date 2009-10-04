@@ -524,12 +524,12 @@ sub time_message {
 
     # Format daily time
     my ($day_h, $day_m) = ($day->hours, $day->minutes);
-    $day_m = ($day_m < 9 ? '0' : '').$day_m;
+    $day_m = ($day_m <= 9 ? '0' : '').$day_m;
     $day  = "$day_h:$day_m";
 
     # Format weekly time
     my ($week_h, $week_m) = ($week->hours, $week->minutes);
-    $week_m = ($week_m < 9 ? '0' : '').$week_m;
+    $week_m = ($week_m <= 9 ? '0' : '').$week_m;
     $week_h += 24 * $week->days;
     $week = "$week_h:$week_m";
 
