@@ -50,7 +50,7 @@ my $background_joins  = '#00FF00';
 my $background_leaves = '#FF0000';
 
 my $popup_delay_in_seconds = 3;
-my $wait_time_in_seconds   = 30;
+my $wait_time_in_seconds   = 60;
 my $animation_delay        = 0.003;
 
 my $ICON_FILE     = "$FindBin::Bin/punch_in.png";
