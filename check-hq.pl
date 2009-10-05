@@ -21,8 +21,6 @@
 #   $ sudo aptitude install libgtk2-trayicon-perl libcrypt-ssleay-perl \
 #     libwww-mechanize-perl libdatetime-perl
 # ----------------------------------------------------------------------------
-use FindBin;
-
 # v Configurable options ------------------------------------------------------
 my $COMPANY = "Warp";
 
@@ -59,8 +57,9 @@ my $ICON_OUT_FILE = "$FindBin::Bin/punch_out.png";
 my $browser = "/usr/bin/sensible-browser";
 
 # ^ Configurable options ------------------------------------------------------
-
 use WWW::Mechanize;
+use FindBin;
+use Error qw(:try);
 
 use DateTime;
 use DateTime::Duration;
@@ -557,28 +556,32 @@ sub update_info_hq {
 
 # called periodicaly
 sub check {
-    my %newPeople = whois_at_hq();
+    try {
+        my %newPeople = whois_at_hq();
 
-    # this does not work o_O
-    #$am_i_punched = exists $newPeople{$NAME};
-    foreach my $name ( keys %newPeople ) {
-        $am_i_punched = ( $name eq $NAME );
-        last if $am_i_punched;
+        # this does not work o_O
+        #$am_i_punched = exists $newPeople{$NAME};
+        foreach my $name ( keys %newPeople ) {
+            $am_i_punched = ( $name eq $NAME );
+            last if $am_i_punched;
+        }
+        if ( $am_i_punched ne $old_punched_status ) {
+            change_state($am_i_punched);
+            $old_punched_status = $am_i_punched;
+        }
+        my @join  = grep { not exists $currentPeople{$_} } keys %newPeople;
+        my @leave = grep { not exists $newPeople{$_} } keys %currentPeople;
+
+        print "join: @join leave: @leave\n" unless $silent;
+        build_msg( \@join, \@leave );
+
+        %currentPeople = %newPeople;
     }
-    if ( $am_i_punched ne $old_punched_status ) {
-        change_state($am_i_punched);
-        $old_punched_status = $am_i_punched;
+    catch Error with {
     }
-    my @join  = grep { not exists $currentPeople{$_} } keys %newPeople;
-    my @leave = grep { not exists $newPeople{$_} } keys %currentPeople;
-
-    print "join: @join leave: @leave\n" unless $silent;
-    build_msg( \@join, \@leave );
-
-    %currentPeople = %newPeople;
-
-    update_info_hq();
-
+    finally {
+        update_info_hq();
+    };
     return 1;
 }
 
