@@ -22,10 +22,10 @@
 #     libwww-mechanize-perl libdatetime-perl
 # ----------------------------------------------------------------------------
 # v Configurable options ------------------------------------------------------
-my $COMPANY = "Warp";
+my $COMPANY = "Zentyal";
 
-$ENV{HTTPS_PKCS12_FILE}     = '/home/blaxter/.ssl/foo.p12';
-$ENV{HTTPS_PKCS12_PASSWORD} = '';
+#$ENV{HTTPS_PKCS12_FILE}     = '/home/blaxter/.ssl/foo.p12';
+#$ENV{HTTPS_PKCS12_PASSWORD} = '';
 
 # Enter your name here as it appears on users list
 my $NAME = 'Jesús García Sáez';
@@ -33,7 +33,7 @@ my $NAME = 'Jesús García Sáez';
 my $auto_punch_in  = 0; # punch in on start?
 my $auto_punch_out = 0; # punch out on pc shutdown?
 
-my $host      = 'lisa.warp.es';
+my $host      = 'tt.zentyal.com';
 my $base_url  = "https://$host";
 
 # Authenticate options
@@ -190,15 +190,7 @@ sub login {
         $mech->get( $base_url . '/login/ssl' );
     }
     else {
-        $mech->get( $base_url . '/login/login' );
-
-        $mech->submit_form(
-            form_number => 1,
-            fields      => {
-                'user[name]'      => $user,
-                'user[prepasswd]' => $pass
-            }
-        );
+        $mech->credentials( 'tt.zentyal.com:443', 'Zentyal Authentication Realm', $user => $pass );
     }
 }
 
