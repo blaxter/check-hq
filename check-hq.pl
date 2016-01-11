@@ -227,9 +227,9 @@ sub my_hours {
     my $found    = 0;
     my $response = $mech->content();
     for my $line ( split( '\n', $response ) ) {
-        my ($info) = $line =~ m:<li>(Horas de.*)</li>:;
+        my ($info) = $line =~ m:<li>(.*hours.*)</li>:i;
         if ($info) {
-            my ( $h, $m ) = $info =~ m/(\d+):(\d+)/;
+            my ( $h, $m ) = $info =~ m/(\d+):(\d+)/i;
             my $time = DateTime::Duration->new( hours => $h, minutes => $m );
             if ( $found eq 0 ) {
                 $daily_time = $time;
